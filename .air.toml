@@ -5,7 +5,7 @@ tmp_dir = "tmp"
   pre_cmd = ["templ generate"]
   cmd = "go build -o ./tmp/main ./cmd/"
   bin = "./tmp/main"
-  delay = 1000
+  delay = 10
   exclude_dir = ["assets", "tmp", "vendor"]
   exclude_file = []
   exclude_regex = [".*_templ.go"]
@@ -28,6 +28,12 @@ tmp_dir = "tmp"
 
 [log]
   time = true
+
+
+[proxy]
+  app_port = 8080
+  enabled = true
+  proxy_port = 8090
 
 [misc]
   clean_on_exit = true

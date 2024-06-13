@@ -1,0 +1,11 @@
+package views
+
+import "github.com/asdavies/auth/views/layouts"
+
+templ hello(name string) {
+	<div>Hello, { name }</div>
+}
+
+templ Index(name string) {
+    @layouts.Html(layouts.MetaInfo{}, hello(name))
+}

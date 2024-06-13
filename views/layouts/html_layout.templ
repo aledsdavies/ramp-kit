@@ -1,0 +1,34 @@
+package layouts
+
+import "strings"
+
+type MetaInfo struct {
+	Title       string
+	Description string
+	Keywords    []string
+	Author      string
+}
+
+templ Html(meta MetaInfo, contents templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<title>{ meta.Title }</title>
+			if meta.Description != "" {
+				<meta name="description" content={ meta.Description }/>
+			}
+			if len(meta.Keywords) > 0 {
+				<meta name="keywords" content={ strings.Join(meta.Keywords, ", ") }/>
+			}
+			if meta.Author != "" {
+				<meta name="author" content={ meta.Author }/>
+			}
+			<script src="https://unpkg.com/htmx.org@1.9.2" defer></script>
+            <script src="https://unpkg.com/alpinejs" defer></script>
+		</head>
+		<body>
+			@contents
+		</body>
+	</html>
+}
