@@ -1,0 +1,85 @@
+/* Modern CSS Reset 2024 */
+
+/*
+ * Makes sizing simpler by including padding and border in the element's total width and height.
+ * This avoids unexpected element size issues.
+ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/*
+ * Removes default margin and padding from all elements and forces them to inherit the font style from their parent.
+ * This creates a clean, consistent starting point.
+ * min-width is to prevent overflow issues when using flex-box
+ */
+* {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    min-width: 0;
+}
+
+/*
+ * Supports both light and dark mode color schemes based on user preferences.
+ * Enhances readability with modern punctuation handling.
+ */
+html {
+    hanging-punctuation: first last;
+    color-scheme: dark light;
+}
+
+/*
+ * Ensures the body takes at least the full viewport height.
+ * This prevents issues with short pages and ensures proper positioning of footer elements.
+ */
+body {
+    min-height: 100vh;
+}
+
+/*
+ * Makes media elements responsive by ensuring they don't overflow their containers.
+ * Aligns media elements vertically in the middle when used inline or within flex containers.
+ * Applies an italic style to alternative text when images fail to load, enhancing readability.
+ * Ensures background images cover the element fully without repeating.
+ * Adds margin around shapes for advanced layout techniques.
+ */
+img,
+picture,
+svg,
+video {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    font-style: italic;
+    background-repeat: no-repeat;
+    background-size: cover;
+    shape-margin: 0.75rem;
+}
+
+/*
+ * Balances text wrapping for headers, enhancing readability.
+ * Limits paragraph width to 75 characters, a commonly recommended line length for readability.
+ */
+h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+}
+
+p {
+    max-width: 75ch;
+    text-wrap: pretty;
+}
+
+/*
+ * Provides smooth scrolling for target elements when users do not prefer reduced motion.
+ * Adds padding at the top for better visibility of target elements.
+ */
+@media (prefers-reduced-motion: no-preference) {
+    :has(:target) {
+        scroll-behavior: smooth;
+        scroll-padding-top: 2rem;
+    }
+}
+

@@ -1,11 +1,14 @@
 package views
 
 import "github.com/asdavies/auth/views/layouts"
+import "github.com/asdavies/auth/internal/models"
 
 templ hello(name string) {
 	<div>Hello, { name }</div>
 }
 
 templ Index(name string) {
-    @layouts.Html(layouts.MetaInfo{}, hello(name))
+    @layouts.Html(models.MetaInfo{}) {
+        @hello(name)
+    }
 }

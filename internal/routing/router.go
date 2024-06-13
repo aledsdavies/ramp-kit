@@ -1,30 +1,45 @@
 package routing
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/a-h/templ"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
-
+	"github.com/asdavies/auth/public"
 	"github.com/asdavies/auth/views"
 )
 
 func NewRouter() *chi.Mux {
-    r := chi.NewRouter()
+	r := chi.NewRouter()
 
-    r.Use(middleware.Logger)
-    r.Use(middleware.Recoverer)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 
-    r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-        http.Redirect(w, r,  "/login", http.StatusSeeOther)
-    })
+	r.Group(func(r chi.Router) {
+		r.Use(middleware.Compress(9))
+        r.Use(cacheControlMiddleware)
+		// Serve the embedded static files
+		fileServer := http.FileServer(http.FS(public.StylesFS))
+		r.Handle(fmt.Sprintf("/styles/%s/*", public.CssVersion), http.StripPrefix(fmt.Sprintf("/styles/%s/", public.CssVersion), fileServer))
+	})
 
-    r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
-        templ.Handler(views.Index("Aled")).ServeHTTP(w,r)
-    })
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	})
 
-    return r
+	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
+		templ.Handler(views.Index("Aled")).ServeHTTP(w, r)
+	})
+
+	return r
 }
 
+func cacheControlMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Cache-Control", "public, max-age=31536000")
+        next.ServeHTTP(w, r)
+    })
+}

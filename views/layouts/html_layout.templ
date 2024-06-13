@@ -1,34 +1,40 @@
 package layouts
 
 import "strings"
+import "github.com/asdavies/auth/internal/models"
+import "fmt"
+import "github.com/asdavies/auth/public"
 
-type MetaInfo struct {
-	Title       string
-	Description string
-	Keywords    []string
-	Author      string
-}
+var resetVersion = fmt.Sprintf("/styles/%s/reset.css", public.CssVersion)
 
-templ Html(meta MetaInfo, contents templ.Component) {
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="UTF-8"/>
-			<title>{ meta.Title }</title>
-			if meta.Description != "" {
-				<meta name="description" content={ meta.Description }/>
-			}
-			if len(meta.Keywords) > 0 {
-				<meta name="keywords" content={ strings.Join(meta.Keywords, ", ") }/>
-			}
-			if meta.Author != "" {
-				<meta name="author" content={ meta.Author }/>
-			}
-			<script src="https://unpkg.com/htmx.org@1.9.2" defer></script>
-            <script src="https://unpkg.com/alpinejs" defer></script>
-		</head>
-		<body>
-			@contents
-		</body>
-	</html>
+templ Html(meta models.MetaInfo) {
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>{ meta.Title }</title>
+    if meta.Description != "" {
+    <meta name="description" content={ meta.Description } />
+    }
+    if len(meta.Keywords) > 0 {
+    <meta name="keywords" content={ strings.Join(meta.Keywords, ", " ) } />
+    }
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    if meta.Author != "" {
+    <meta name="author" content={ meta.Author } />
+    }
+    <script src="https://unpkg.com/htmx.org@1.9.2" defer></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <link rel="preload" href={string(templ.SafeURL(resetVersion))} as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript>
+        <link rel="stylesheet" href={string(templ.SafeURL(resetVersion))} />
+    </noscript>
+</head>
+
+<body>
+    { children... }
+</body>
+
+</html>
 }
