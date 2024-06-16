@@ -35,10 +35,11 @@ dev: check-deps clean
 
 dev/server:
 	$(AIR) \
+	--build.pre_cmd "rm -rf public/css,npm --prefix frontend run build:css" \
 	--build.cmd "go build -o .tmp/main ./cmd/ && templ generate --notify-proxy --proxyport=8090" \
 	--build.bin ".tmp/main" \
 	--build.delay "100" \
-	--build.exclude_dir "node_modules" \
+	--build.exclude_dir "frontend/node_modules,public/css,public/js" \
 	--build.include_ext "go,css" \
 	--build.stop_on_error "false" \
 	--misc.clean_on_exit true

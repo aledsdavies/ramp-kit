@@ -1,8 +1,11 @@
 ### Jetbrains
 .idea/
 .tmp/
+node_modules/
 
+*.min.css
 *_templ.go
+*_templ.txt
 
 ### Go template
 # If you prefer the allow list template instead of the deny list, see community template:

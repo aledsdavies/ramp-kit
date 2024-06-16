@@ -1,0 +1,13 @@
+{
+  "name": "public",
+  "version": "1.0.0",
+  "scripts": {
+    "build:css": "postcss './css/**/*.css'  --base css --dir ../public/css --ext .min.css"
+  },
+  "devDependencies": {
+    "cssnano": "^7.0.2",
+    "postcss": "^8.4.38",
+    "postcss-cli": "^11.0.0",
+    "postcss-preset-env": "^9.5.14"
+  }
+}

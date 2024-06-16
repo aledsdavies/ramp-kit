@@ -2,7 +2,6 @@ package layouts
 
 import "strings"
 import "github.com/asdavies/auth/internal/models"
-import "fmt"
 import "github.com/asdavies/auth/public"
 
 
@@ -14,9 +13,6 @@ templ Links(links ...string) {
         </noscript>
     }
 }
-
-var resetVersion = fmt.Sprintf("/styles/%s/reset.css", public.CssVersion)
-var mainVersion = fmt.Sprintf("/styles/%s/main.css", public.CssVersion)
 
 templ Html(meta models.MetaInfo) {
 <!DOCTYPE html>
@@ -41,7 +37,10 @@ templ Html(meta models.MetaInfo) {
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 
 
-    @Links(resetVersion, mainVersion)
+    @Links(
+        public.CssFileVersions.ResourcePath("reset.min.css"),
+        public.CssFileVersions.ResourcePath("main.min.css"),
+    )
 </head>
 
 <body>

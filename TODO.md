@@ -10,9 +10,9 @@
 ## Serving Static Files
 
 - [x] Introduce gzip for static content
-    - [ ] Investigate switching out gzip for brotli
-        - [ ] Test Brotli compression effectiveness on various file types
-        - [ ] Ensure server compatibility and configuration for Brotli
+    - [x] Investigate switching out gzip for brotli
+        - [x] Test Brotli compression effectiveness on various file types
+        - [x] Ensure server compatibility and configuration for Brotli
 - [x] Introduce hashing into the `/styles/{hash}/*` path to allow us to break caching on file changes
     - [x] Implement hash generation for static files
     - [x] Update references to static files to use hashed paths

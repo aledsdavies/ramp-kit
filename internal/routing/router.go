@@ -1,7 +1,6 @@
 package routing
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/a-h/templ"
@@ -21,9 +20,8 @@ func NewRouter() *chi.Mux {
 	r.Group(func(r chi.Router) {
 		r.Use(middleware.Compress(9))
         r.Use(cacheControlMiddleware)
-		// Serve the embedded static files
-		fileServer := http.FileServer(http.FS(public.StylesFS))
-		r.Handle(fmt.Sprintf("/styles/%s/*", public.CssVersion), http.StripPrefix(fmt.Sprintf("/styles/%s/", public.CssVersion), fileServer))
+
+        public.CssFileVersions.BuildHandlers(r)
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
