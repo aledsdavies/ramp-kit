@@ -4,7 +4,17 @@ import "github.com/asdavies/auth/views/layouts"
 import "github.com/asdavies/auth/internal/models"
 
 templ hello(name string) {
-	<div>Hello, { name }</div>
+    <h1>Title</h1>
+    <h2>Subtitle</h2>
+    <h3>Section Heading</h3>
+    <h4>Subsection Heading</h4>
+    <h5>Minor Heading</h5>
+    <h6>Smallest Heading</h6>
+    <p>Paragraph text</p>
+    <small>Small text</small>
+    <button>Button text</button>
+
+	<p class="test">Hello, { name }</p>
 }
 
 templ Index(name string) {

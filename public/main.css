@@ -1,0 +1,72 @@
+:root {
+    /* Font and Text Settings */
+    --min-font-size: 1rem;
+    --max-font-size: 1.5rem;
+    --scale-factor: 1.2;
+    --preferred-font-size: calc(1rem + 1cqi);
+    --line-height: 1.5;
+    --body-font: 'Merriweather', serif;
+    --heading-font: 'JetBrains Mono', monospace;
+
+    /* Future extensions can add more font-related variables here */
+}
+
+body {
+    font-family: var(--body-font), serif;
+    font-size: clamp(var(--min-font-size), var(--preferred-font-size), var(--max-font-size));
+    line-height: var(--line-height);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--heading-font), monospace;
+    font-weight: 700;
+}
+
+h1 {
+    font-size: clamp(2rem, calc(1.5rem + 1cqi), 3rem);
+    line-height: calc(var(--line-height) * 1.2);
+}
+
+h2 {
+    font-size: clamp(1.75rem, calc(1.25rem + 1cqi), 2.5rem);
+    line-height: calc(var(--line-height) * 1.15);
+}
+
+h3 {
+    font-size: clamp(1.5rem, calc(1.125rem + 1cqi), 2rem);
+    line-height: calc(var(--line-height) * 1.1);
+}
+
+h4 {
+    font-size: clamp(1.25rem, calc(1rem + 1cqi), 1.75rem);
+    line-height: calc(var(--line-height) * 1.05);
+}
+
+h5 {
+    font-size: clamp(1rem, calc(0.875rem + 1cqi), 1.5rem);
+    line-height: var(--line-height);
+}
+
+h6 {
+    font-size: clamp(0.875rem, calc(0.75rem + 1cqi), 1.25rem);
+    line-height: var(--line-height);
+}
+
+p {
+    font-size: clamp(1rem, calc(1rem + 0.5cqi), 1.125rem);
+    line-height: var(--line-height);
+}
+
+small {
+    font-size: clamp(0.875rem, calc(0.75rem + 0.5cqi), 1rem);
+    line-height: var(--line-height);
+}
+
+button, input, select, textarea {
+    font-size: clamp(0.875rem, calc(0.75rem + 0.5cqi), 1rem);
+    line-height: var(--line-height);
+}
+
+.test {
+    color: green;
+}

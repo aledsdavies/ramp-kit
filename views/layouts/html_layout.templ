@@ -5,7 +5,18 @@ import "github.com/asdavies/auth/internal/models"
 import "fmt"
 import "github.com/asdavies/auth/public"
 
+
+templ Links(links ...string) {
+    for _, link := range links {
+        <link rel="preload" href={string(templ.SafeURL(link))} as="style" onload="this.onload=null;this.rel='stylesheet'" />
+        <noscript>
+            <link rel="stylesheet" href={string(templ.SafeURL(link))} />
+        </noscript>
+    }
+}
+
 var resetVersion = fmt.Sprintf("/styles/%s/reset.css", public.CssVersion)
+var mainVersion = fmt.Sprintf("/styles/%s/main.css", public.CssVersion)
 
 templ Html(meta models.MetaInfo) {
 <!DOCTYPE html>
@@ -26,10 +37,11 @@ templ Html(meta models.MetaInfo) {
     }
     <script src="https://unpkg.com/htmx.org@1.9.2" defer></script>
     <script src="https://unpkg.com/alpinejs" defer></script>
-    <link rel="preload" href={string(templ.SafeURL(resetVersion))} as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript>
-        <link rel="stylesheet" href={string(templ.SafeURL(resetVersion))} />
-    </noscript>
+
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+
+    @Links(resetVersion, mainVersion)
 </head>
 
 <body>

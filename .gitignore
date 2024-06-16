@@ -1,6 +1,6 @@
 ### Jetbrains
 .idea/
-tmp/
+.tmp/
 
 *_templ.go
 
