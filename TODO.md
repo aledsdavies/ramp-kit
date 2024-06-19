@@ -10,13 +10,13 @@
 ## Serving Static Files
 
 - [x] Introduce gzip for static content
-    - [x] Investigate switching out gzip for brotli
-        - [x] Test Brotli compression effectiveness on various file types
-        - [x] Ensure server compatibility and configuration for Brotli
+    - [ ] Investigate switching out gzip for brotli
+        - [ ] Test Brotli compression effectiveness on various file types
+        - [ ] Ensure server compatibility and configuration for Brotli
 - [x] Introduce hashing into the `/styles/{hash}/*` path to allow us to break caching on file changes
     - [x] Implement hash generation for static files
     - [x] Update references to static files to use hashed paths
-    - [ ] Investigate having a unique hash per file instead of one for all css
+    - [X] Investigate having a unique hash per file instead of one for all css
 - [ ] Introduce images, etc., to the project, ideally using modern web standards
     - [ ] Optimize images for the web
     - [ ] Implement responsive images (e.g., using `srcset` and `sizes`)
@@ -24,20 +24,38 @@
 
 ## Styling
 
-- [ ] Investigate a nice way to load css per page
-    - [ ] Investigate CSS Modules
-    - [ ] Investigate pulling CSS from Templ defintiions
+- [x] Investigate a nice way to load css per page
+    - [X] Investigate CSS Modules
+    - [x] Investigate pulling CSS from Templ definitions
 - [x] Embed styles into their own global var and serve them from `/styles/*`
 - [X] Customize a reset.css using modern standards and practices
     - [X] Research modern CSS resets (e.g., Normalize.css, modern-css-reset)
     - [X] Implement and integrate a customized reset.css
+- [ ] Manage reading post CSS modules into the templ templates
+    - [X] Mapping the generated CSS class names into templ components
+    - [ ] Dynamic loading of the css. If a value from a css module is loaded we should
+    also load it in the HTML in the template
+    - [ ] Panic Error if we try to load a CSS value that does not exist
+
 - [ ] Create a main.css for the project
     - [ ] Produce a design system using CSS vars to control the project from main.css
         - [ ] Structure a type system with CSS vars
         - [ ] Define color palette using OKLCH for supporting P3 colors
-        - [ ] Set up typography (font families, sizes, weights)
+        - [x] Set up typography (font families, sizes, weights)
         - [ ] Establish spacing scale (margins, paddings)
         - [ ] Create reusable components (buttons, forms, cards)
+
+## Database
+
+- [ ] Build a module for connecting to databases
+- [ ] Add support out of the box for some kind of SQLite solution
+- [ ] Add support for in memory datastores that we can use for local testing
+
+## Permissions
+
+- [ ] Build a module for managing permissions in the app
+- [ ] Possible embed spicedb to take advantage of using a zanzibar type permissions models
+    - [ ]
 
 ## Pages
 

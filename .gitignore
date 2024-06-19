@@ -1,9 +1,10 @@
 ### Jetbrains
 .idea/
 .tmp/
+tmp/
 node_modules/
 
-*.min.css
+public/css/**
 *_templ.go
 *_templ.txt
 

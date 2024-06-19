@@ -2,6 +2,7 @@ package views
 
 import "github.com/asdavies/auth/views/layouts"
 import "github.com/asdavies/auth/internal/models"
+import "github.com/asdavies/auth/public"
 
 templ hello(name string) {
     <h1>Title</h1>
@@ -14,7 +15,7 @@ templ hello(name string) {
     <small>Small text</small>
     <button>Button text</button>
 
-	<p class="test">Hello, { name }</p>
+	<p class={public.CSS("main.test")}>Hello, { name }</p>
 }
 
 templ Index(name string) {

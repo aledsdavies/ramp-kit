@@ -8,6 +8,7 @@
     "cssnano": "^7.0.2",
     "postcss": "^8.4.38",
     "postcss-cli": "^11.0.0",
+    "postcss-modules": "^6.0.0",
     "postcss-preset-env": "^9.5.14"
   }
 }

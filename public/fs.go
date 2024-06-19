@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"embed"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/fs"
@@ -18,16 +19,18 @@ import (
 //go:embed css/*.css
 var stylesFS embed.FS
 
-type FileVersions map[string]string
+//go:embed css/styles.map.json
+var stylesMapFile embed.FS
 
+type fileVersions map[string]string
 
-func (f FileVersions) ResourcePath(path string) string {
+func (f fileVersions) ResourcePath(path string) string {
 	hash, ok := f[path]
 	assert.PanicIf(!ok, fmt.Sprintf("expected the file path '%s' to exist in FileVersions. Current FileVersions: %+v", path, f))
 	return fmt.Sprintf("/styles/%s/%s", hash, path)
 }
 
-func (f FileVersions) BuildHandlers(r chi.Router) {
+func (f fileVersions) BuildHandlers(r chi.Router) {
 	// Serve the embedded static files
 	cssDir, err := fs.Sub(stylesFS, "css")
 	assert.PanicIfError(err, fmt.Sprintf("the application should have loaded the styles correctly. Error: %v", err))
@@ -40,9 +43,46 @@ func (f FileVersions) BuildHandlers(r chi.Router) {
 	}
 }
 
-var CssFileVersions = make(FileVersions)
+func CssPath(path string) string {
+	return cssFileVersions.ResourcePath(path)
+}
+
+func BuildCssHandlers(r chi.Router) {
+	cssFileVersions.BuildHandlers(r)
+}
+
+type cssClassMap map[string]string
+
+func (ccm cssClassMap) GetClassName(path string) string {
+	class, ok := ccm[path]
+	if !ok {
+		keys := make([]string, 0, len(ccm))
+		for k := range ccm {
+			keys = append(keys, k)
+		}
+		assert.PanicIf(!ok, fmt.Sprintf("CSS value for '%s' does not exist. Available keys: %v", path, keys))
+	}
+	return class
+}
+
+func CSS(path string) string {
+	return cssModules.GetClassName(path)
+}
+
+var cssModules = make(cssClassMap)
+var cssFileVersions = make(fileVersions)
 
 func init() {
+	// Parse the JSON file containing CSS mappings
+	data, err := stylesMapFile.ReadFile("css/styles.map.json")
+	if err != nil {
+		log.Fatalf("Failed to read CSS module data: %v", err)
+	}
+
+	if err := json.Unmarshal(data, &cssModules); err != nil {
+		log.Fatalf("Failed to parse CSS module data: %v", err)
+	}
+
 	// Walk through all files in the embedded file system
 	fs.WalkDir(stylesFS, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -61,7 +101,7 @@ func init() {
 				log.Fatal(err)
 			}
 
-			CssFileVersions[strings.TrimPrefix(path, "css/")] = hex.EncodeToString(hash.Sum(nil))
+			cssFileVersions[strings.TrimPrefix(path, "css/")] = hex.EncodeToString(hash.Sum(nil))
 		}
 		return nil
 	})

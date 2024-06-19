@@ -21,7 +21,7 @@ func NewRouter() *chi.Mux {
 		r.Use(middleware.Compress(9))
         r.Use(cacheControlMiddleware)
 
-        public.CssFileVersions.BuildHandlers(r)
+        public.BuildCssHandlers(r)
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
