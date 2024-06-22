@@ -6,6 +6,7 @@ pkgs.mkShell {
     pkgs.go
     pkgs.git
     pkgs.templ
+    pkgs.bun
   ];
 
   shellHook = ''

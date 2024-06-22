@@ -1,7 +1,5 @@
 package views
 
-import "github.com/asdavies/auth/views/layouts"
-import "github.com/asdavies/auth/internal/models"
 import "github.com/asdavies/auth/public"
 
 templ hello(name string) {
@@ -15,11 +13,9 @@ templ hello(name string) {
     <small>Small text</small>
     <button>Button text</button>
 
-	<p class={public.CSS("main.test")}>Hello, { name }</p>
+	<p class={public.CSS(ctx, "main.test")}>Hello, { name }</p>
 }
 
 templ Index(name string) {
-    @layouts.Html(models.MetaInfo{}) {
-        @hello(name)
-    }
+    @hello(name)
 }

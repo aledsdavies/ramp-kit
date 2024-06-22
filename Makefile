@@ -35,7 +35,7 @@ dev: check-deps clean
 
 dev/server:
 	$(AIR) \
-	--build.pre_cmd "rm -rf public/css,npm --prefix frontend run build:css" \
+	--build.pre_cmd "bun run scripts/bundle-css.mjs" \
 	--build.cmd "go build -o .tmp/main ./cmd/ && templ generate --notify-proxy --proxyport=8090" \
 	--build.bin ".tmp/main" \
 	--build.delay "100" \

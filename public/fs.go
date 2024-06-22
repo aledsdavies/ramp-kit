@@ -1,6 +1,7 @@
 package public
 
 import (
+	"context"
 	"crypto/md5"
 	"embed"
 	"encoding/hex"
@@ -13,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/asdavies/auth/internal/assert"
+	"github.com/asdavies/auth/internal/middleware"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -43,17 +45,9 @@ func (f fileVersions) BuildHandlers(r chi.Router) {
 	}
 }
 
-func CssPath(path string) string {
-	return cssFileVersions.ResourcePath(path)
-}
-
-func BuildCssHandlers(r chi.Router) {
-	cssFileVersions.BuildHandlers(r)
-}
-
 type cssClassMap map[string]string
 
-func (ccm cssClassMap) GetClassName(path string) string {
+func (ccm cssClassMap) GetClassName(path string) (string, string) {
 	class, ok := ccm[path]
 	if !ok {
 		keys := make([]string, 0, len(ccm))
@@ -62,15 +56,80 @@ func (ccm cssClassMap) GetClassName(path string) string {
 		}
 		assert.PanicIf(!ok, fmt.Sprintf("CSS value for '%s' does not exist. Available keys: %v", path, keys))
 	}
+
+	// Find the last index of '/'
+	lastIndex := strings.LastIndex(path, ".")
+	filePath := fmt.Sprintf("%s.min.css", strings.ReplaceAll(path[:lastIndex], ".", "/"))
+
+	return class, filePath
+}
+
+type CSSLoader struct {
+	cssModules      cssClassMap
+	cssFileVersions fileVersions
+	alwaysLoads     []string
+	loadFiles       map[string][]string
+}
+
+// add ensures that the same CSS path is not added multiple times for the same request ID
+func (cl *CSSLoader) add(ctx context.Context, path string) {
+	requestID := middleware.FromContext(ctx)
+
+	versionedPath := cl.cssFileVersions.ResourcePath(path)
+
+    // Ensure the requestID entry exists in the map
+    if cl.loadFiles[requestID] == nil {
+        cl.loadFiles[requestID] = append([]string{}, cl.alwaysLoads...)
+    }
+
+	// Check if the path is already present
+	for _, v := range cl.loadFiles[requestID] {
+		if v == versionedPath {
+			return
+		}
+	}
+
+	// Add the new path
+	cl.loadFiles[requestID] = append(cl.loadFiles[requestID], versionedPath)
+}
+
+// loadedStyles retrieves and returns the loaded styles, ensuring it's called only once per context
+func (cl *CSSLoader) loadedStyles(ctx context.Context) []string {
+	requestID := middleware.FromContext(ctx)
+	usedFiles := cl.loadFiles[requestID]
+
+	// Delete the requestID entry from the map
+	delete(cl.loadFiles, requestID)
+
+	return usedFiles
+}
+
+func RegisterGlobalStyles(paths ...string) {
+	for _, path := range paths {
+		cssLoader.alwaysLoads = append(cssLoader.alwaysLoads, cssLoader.cssFileVersions.ResourcePath(path))
+	}
+}
+
+func CSS(ctx context.Context, path string) string {
+	class, cssPath := cssLoader.cssModules.GetClassName(path)
+	cssLoader.add(ctx, cssPath)
 	return class
 }
 
-func CSS(path string) string {
-	return cssModules.GetClassName(path)
+func LoadPageStyles(ctx context.Context) []string {
+	return cssLoader.loadedStyles(ctx)
 }
 
-var cssModules = make(cssClassMap)
-var cssFileVersions = make(fileVersions)
+func BuildCssHandlers(r chi.Router) {
+	cssLoader.cssFileVersions.BuildHandlers(r)
+}
+
+var cssLoader = &CSSLoader{
+	cssModules:      make(cssClassMap),
+	cssFileVersions: make(fileVersions),
+	alwaysLoads:     []string{},
+	loadFiles:       make(map[string][]string),
+}
 
 func init() {
 	// Parse the JSON file containing CSS mappings
@@ -79,7 +138,7 @@ func init() {
 		log.Fatalf("Failed to read CSS module data: %v", err)
 	}
 
-	if err := json.Unmarshal(data, &cssModules); err != nil {
+	if err := json.Unmarshal(data, &cssLoader.cssModules); err != nil {
 		log.Fatalf("Failed to parse CSS module data: %v", err)
 	}
 
@@ -101,7 +160,7 @@ func init() {
 				log.Fatal(err)
 			}
 
-			cssFileVersions[strings.TrimPrefix(path, "css/")] = hex.EncodeToString(hash.Sum(nil))
+			cssLoader.cssFileVersions[strings.TrimPrefix(path, "css/")] = hex.EncodeToString(hash.Sum(nil))
 		}
 		return nil
 	})
