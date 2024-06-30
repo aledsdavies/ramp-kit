@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/a-h/templ"
-	"github.com/asdavies/auth/internal/models"
-	"github.com/asdavies/auth/views/layouts"
+	"github.com/asdavies/internal/models"
+	"github.com/asdavies/views/components/html"
 )
 
 type pageBuilder func() templ.Component
@@ -25,6 +25,7 @@ func htmlRenderer(pageBuilder pageBuilder) http.HandlerFunc {
         renderedPage := buf.String()
 
         // Render the layout with the rendered page HTML
-        templ.Handler(layouts.Html(models.MetaInfo{}, renderedPage)).ServeHTTP(w, r)
+        templ.Handler(html.Html(models.MetaInfo{}, renderedPage)).ServeHTTP(w, r)
     }
 }
+

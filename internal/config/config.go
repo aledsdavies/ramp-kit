@@ -14,7 +14,7 @@ func InitConfig() *Config {
     config := &Config{
         LogLevel:  "DEBUG",
         Port:      8080,
-        GlobalCSS: []string{"reset.min.css", "main.min.css"},
+        GlobalCSS: []string{"styles/reset.min.css", "styles/main.min.css"},
     }
 
     log.Printf("Configuration initialized: %+v\n", config)

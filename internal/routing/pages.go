@@ -2,7 +2,7 @@ package routing
 
 import (
 	"github.com/a-h/templ"
-	"github.com/asdavies/auth/views"
+	"github.com/asdavies/views"
 	"github.com/go-chi/chi/v5"
 )
 

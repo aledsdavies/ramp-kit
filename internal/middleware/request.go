@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/asdavies/auth/internal/assert"
+	"github.com/asdavies/internal/assert"
 	"github.com/google/uuid"
 )
 
