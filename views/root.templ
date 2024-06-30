@@ -1,6 +1,6 @@
 package views
 
-import "github.com/asdavies/auth/public"
+import "github.com/asdavies/public"
 
 templ hello(name string) {
     <h1>Title</h1>
@@ -13,7 +13,7 @@ templ hello(name string) {
     <small>Small text</small>
     <button>Button text</button>
 
-	<p class={public.CSS(ctx, "main.test")}>Hello, { name }</p>
+	<p class={public.CSS(ctx, "styles.main.test")}>Hello, { name }</p>
 }
 
 templ Index(name string) {

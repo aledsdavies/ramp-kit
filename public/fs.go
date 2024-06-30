@@ -13,12 +13,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/asdavies/auth/internal/assert"
-	"github.com/asdavies/auth/internal/middleware"
+	"github.com/asdavies/internal/assert"
+	"github.com/asdavies/internal/middleware"
 	"github.com/go-chi/chi/v5"
 )
 
-//go:embed css/*.css
+//go:embed css/**/*.css
 var stylesFS embed.FS
 
 //go:embed css/styles.map.json

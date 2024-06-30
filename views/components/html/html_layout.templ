@@ -1,0 +1,46 @@
+package html
+
+import "strings"
+import "github.com/asdavies/internal/models"
+import "github.com/asdavies/public"
+
+templ links(links ...string) {
+	for _, link := range links {
+		<link rel="preload" href={ string(templ.SafeURL(link)) } as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link rel="stylesheet" href={ string(templ.SafeURL(link)) }/>
+		</noscript>
+	}
+}
+
+templ Html(meta models.MetaInfo, pageContent string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<title>{ meta.Title }</title>
+			if meta.Description != "" {
+				<meta name="description" content={ meta.Description }/>
+			}
+			if len(meta.Keywords) > 0 {
+				<meta name="keywords" content={ strings.Join(meta.Keywords, ", ") }/>
+			}
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			if meta.Author != "" {
+				<meta name="author" content={ meta.Author }/>
+			}
+			<script src="https://unpkg.com/htmx.org@1.9.2" defer></script>
+			<script src="https://unpkg.com/alpinejs" defer></script>
+			<link
+				href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Merriweather:wght@400;700&display=swap"
+				rel="stylesheet"
+			/>
+			@links(
+				public.LoadPageStyles(ctx)...,
+			)
+		</head>
+		<body>
+			@templ.Raw(pageContent)
+		</body>
+	</html>
+}

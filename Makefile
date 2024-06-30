@@ -6,6 +6,7 @@ GO_FILES := $(shell find . -type f -name '*.go')
 AIR := $(shell command -v air 2> /dev/null)
 GO := $(shell command -v go 2> /dev/null)
 TEMPL := $(shell command -v templ 2> /dev/null)
+BUN := $(shell command -v bun 2> /dev/null)
 
 # Default target
 .PHONY: help
@@ -39,7 +40,7 @@ dev/server:
 	--build.cmd "go build -o .tmp/main ./cmd/ && templ generate --notify-proxy --proxyport=8090" \
 	--build.bin ".tmp/main" \
 	--build.delay "100" \
-	--build.exclude_dir "frontend/node_modules,public/css,public/js" \
+	--build.exclude_dir "views/node_modules,public/css,public/js" \
 	--build.include_ext "go,css" \
 	--build.stop_on_error "false" \
 	--misc.clean_on_exit true
@@ -63,18 +64,22 @@ test: check-deps
 .PHONY: deps
 deps: check-deps
 	$(GO) mod tidy
+	$(BUN) i --cwd ./views
 
 # Check for dependencies
 .PHONY: check-deps
 check-deps:
 ifndef AIR
-	$(error "Air is not installed. Please install it from https://github.com/cosmtrek/air")
+	$(error "Air is not installed.")
 endif
 ifndef GO
-	$(error "Go is not installed. Please install it from https://golang.org/")
+	$(error "Go is not installed.")
 endif
 ifndef TEMPL
-	$(error "Templ is not installed. Please install it from https://github.com/benbjohnson/templ")
+	$(error "Templ is not installed.")
+endif
+ifndef BUN
+	$(error "Bun is not installed.")
 endif
 
 # Default target to display help message

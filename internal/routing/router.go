@@ -6,8 +6,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
-	m "github.com/asdavies/auth/internal/middleware"
-	"github.com/asdavies/auth/public"
+	m "github.com/asdavies/internal/middleware"
+	"github.com/asdavies/public"
 )
 
 func NewRouter() *chi.Mux {

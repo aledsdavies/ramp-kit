@@ -6,11 +6,11 @@ let combinedJson = {};
 module.exports = {
   plugins: [
     require('postcss-modules')({
-      getJSON: function(cssFileName, json) {
+      getJSON: function(cssFileName, json, outputFileName) {
         // Get the relative path from the base CSS directory to the file
-        const relativePath = path.relative('./css', cssFileName);
-        const ext = path.parse(cssFileName).ext;
-        combinedJson[relativePath.replaceAll(ext, '').replaceAll('/', '.')] = json;
+        const relativePath = path.relative("./", cssFileName);
+        const cleanKey = relativePath.replace(path.extname(relativePath), '').replace(new RegExp(path.sep, 'g'), '.');
+        combinedJson[cleanKey] = json;
       },
     }),
     require('postcss-preset-env')({
@@ -26,9 +26,9 @@ module.exports = {
 
 // Hook into the build process to write the combined JSON file once all CSS files are processed
 process.on('exit', () => {
-  const jsonFileName = path.resolve('../public/css', 'styles.map.json');
+  const jsonFileName = path.resolve(__dirname, '../public/css', 'styles.map.json');
   fs.mkdirSync(path.dirname(jsonFileName), { recursive: true });
-  fs.writeFileSync(jsonFileName, JSON.stringify(flattenObject(combinedJson)));
+  fs.writeFileSync(jsonFileName, JSON.stringify(flattenObject(combinedJson), null, 2)); // Added indentation for better readability
 });
 
 // Flattening function that excludes empty objects

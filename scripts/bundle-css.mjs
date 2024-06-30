@@ -8,9 +8,9 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const cssDirectory = path.join(__dirname, '../frontend/css');
+const cssDirectory = path.join(__dirname, '../views');
 const outputDirectory = path.join(__dirname, '../public/css');
-const frontendDir = path.join(__dirname, '../frontend');
+const frontendDir = path.join(__dirname, '../views');
 
 function processAllCSSFiles(directory) {
   // Remove the output directory if it exists
@@ -24,7 +24,7 @@ function processAllCSSFiles(directory) {
   process.chdir(frontendDir);
 
   // Process all CSS files initially using PostCSS with glob pattern
-  execSync(`bunx postcss "${directory}/**/*.css" --config ./postcss.config.js --base css --dir ${outputDirectory} --ext .min.css`);
+  execSync(`bunx postcss "${directory}/**/*.css" --config ./postcss.config.js --base ${directory} --dir ${outputDirectory} --ext .min.css`);
   console.log(`Processed all initial CSS files in ${directory}`);
 
   // Change back to the original working directory
@@ -33,3 +33,4 @@ function processAllCSSFiles(directory) {
 
 // Process all CSS files initially
 processAllCSSFiles(cssDirectory);
+

@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/asdavies/auth/internal/config"
-	"github.com/asdavies/auth/internal/routing"
-	"github.com/asdavies/auth/public"
+	"github.com/asdavies/internal/config"
+	"github.com/asdavies/internal/routing"
+	"github.com/asdavies/public"
 )
 
 func main() {
